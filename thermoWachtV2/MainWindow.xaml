@@ -1,0 +1,151 @@
+﻿<Window x:Class="thermoWachtV2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="clr-namespace:Hardcodet.Wpf.TaskbarNotification;assembly=Hardcodet.NotifyIcon.Wpf"
+        Title="ThermoWatch V2" Height="500" Width="800" WindowStartupLocation="CenterScreen"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True" 
+        MouseLeftButtonDown="Window_MouseLeftButtonDown" StateChanged="Window_StateChanged">
+
+    <Grid>
+        <tb:TaskbarIcon x:Name="TrayIcon" ToolTipText="ThermoWatch V2 (Çalışıyor)" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Göster" Click="MenuShow_Click"/>
+                    <MenuItem Header="Çıkış" Click="MenuExit_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+
+        <Border Background="#E60D0D0D" CornerRadius="15" BorderBrush="#33FFFFFF" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="#1AFFFFFF">
+                    <TextBlock Text="THERMOWATCH V2" Foreground="#00E5FF" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20,0,0,0"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,15,0">
+                        <Button x:Name="BtnSettings" Click="BtnSettings_Click" Width="40" Height="40" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Ayarlar">
+                            <TextBlock Text="⚙" Foreground="White" FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Button>
+                        <Button Click="Hide_Click" Width="40" Height="40" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Arka Plana Al">
+                            <TextBlock Text="✕" Foreground="#FF5252" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="DashboardPage" Grid.Row="1" Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Row="0" Grid.Column="0" Background="#1AFFFFFF" CornerRadius="10" Margin="10" Padding="20">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="CPU" Foreground="#A0A0A0" FontSize="14" FontWeight="SemiBold"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock x:Name="CpuTempText" Text="0°C" Foreground="#FF9100" FontSize="36" FontWeight="Bold" Width="100"/>
+                                <TextBlock x:Name="CpuText" Text="%0" Foreground="#00E5FF" FontSize="36" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" Background="#1AFFFFFF" CornerRadius="10" Margin="10" Padding="20">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="GPU" Foreground="#A0A0A0" FontSize="14" FontWeight="SemiBold"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock x:Name="GpuTempText" Text="0°C" Foreground="#FF3D00" FontSize="36" FontWeight="Bold" Width="100"/>
+                                <TextBlock x:Name="GpuUsageText" Text="%0" Foreground="#00E676" FontSize="36" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Background="#1AFFFFFF" CornerRadius="10" Margin="10" Padding="20">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="MEMORY (RAM)" Foreground="#A0A0A0" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="RamText" Text="%0" Foreground="#D500F9" FontSize="36" FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Background="#1AFFFFFF" CornerRadius="10" Margin="10" Padding="20">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="FAN SPEED" Foreground="#A0A0A0" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="FanText" Text="Auto" Foreground="#B0BEC5" FontSize="36" FontWeight="Bold" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid x:Name="SettingsPage" Grid.Row="1" Margin="20" Visibility="Collapsed">
+                    <Border Background="#1AFFFFFF" CornerRadius="10" Padding="30">
+                        <StackPanel>
+                            <TextBlock Text="UYARI VE SICAKLIK LİMİTLERİ (0 = Kapalı)" Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+
+                            <StackPanel Margin="0,0,0,15">
+                                <Grid>
+                                    <TextBlock Text="CPU Kullanım Sınırı" Foreground="#A0A0A0"/>
+                                    <TextBlock x:Name="CpuLimitLabel" Text="Kapalı" Foreground="#00E5FF" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Slider x:Name="CpuSlider" Minimum="0" Maximum="100" Value="0" Foreground="#00E5FF" ValueChanged="Slider_ValueChanged"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,0,15">
+                                <Grid>
+                                    <TextBlock Text="CPU Sıcaklık Sınırı" Foreground="#A0A0A0"/>
+                                    <TextBlock x:Name="CpuTempLimitLabel" Text="Kapalı" Foreground="#FF9100" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Slider x:Name="CpuTempSlider" Minimum="0" Maximum="110" Value="0" Foreground="#FF9100" ValueChanged="Slider_ValueChanged"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,0,15">
+                                <Grid>
+                                    <TextBlock Text="GPU Sıcaklık Sınırı" Foreground="#A0A0A0"/>
+                                    <TextBlock x:Name="GpuLimitLabel" Text="Kapalı" Foreground="#FF3D00" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Slider x:Name="GpuSlider" Minimum="0" Maximum="110" Value="0" Foreground="#FF3D00" ValueChanged="Slider_ValueChanged"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,0,0,25">
+                                <Grid>
+                                    <TextBlock Text="RAM Kullanım Sınırı" Foreground="#A0A0A0"/>
+                                    <TextBlock x:Name="RamLimitLabel" Text="Kapalı" Foreground="#D500F9" HorizontalAlignment="Right"/>
+                                </Grid>
+                                <Slider x:Name="RamSlider" Minimum="0" Maximum="100" Value="0" Foreground="#D500F9" ValueChanged="Slider_ValueChanged"/>
+                            </StackPanel>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" Click="BtnBack_Click" Content="İPTAL / GERİ" Height="40" Background="#3300E5FF" Foreground="#00E5FF" BorderThickness="1" BorderBrush="#00E5FF" Cursor="Hand">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="8"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+
+                                <Button Grid.Column="2" Click="BtnSave_Click" Content="AYARLARI KAYDET" Height="40" Background="#00E676" Foreground="Black" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="8"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
